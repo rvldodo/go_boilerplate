@@ -6,24 +6,34 @@ import (
 	"github.com/gorilla/mux"
 	"gorm.io/gorm"
 
+	"github.com/rvldodo/boilerplate/app/handlers/auth"
 	"github.com/rvldodo/boilerplate/app/middlewares"
+	"github.com/rvldodo/boilerplate/domain/services"
+	"github.com/rvldodo/boilerplate/domain/store"
 	"github.com/rvldodo/boilerplate/lib/log"
 )
 
 type ServerAPI struct {
 	Addrs string
-	Store *gorm.DB
+	DB    *gorm.DB
 }
 
 func NewAPI(addrs string, store *gorm.DB) *ServerAPI {
 	return &ServerAPI{
 		Addrs: addrs,
-		Store: store,
+		DB:    store,
 	}
 }
 
 func (s *ServerAPI) Run() error {
 	router := mux.NewRouter()
+	subrouter := router.PathPrefix("/api/v1").Subrouter()
+
+	// User
+	userStore := store.NewUserStore(s.DB)
+	userService := services.NewUserService(userStore)
+	userHandler := auth.NewHandler(userService)
+	userHandler.RegisterRoutes(subrouter)
 
 	middlewares.LogginMiddleware(router)
 

@@ -5,6 +5,7 @@ import (
 
 	"github.com/rvldodo/boilerplate/domain/model"
 	"github.com/rvldodo/boilerplate/domain/repository"
+	"github.com/rvldodo/boilerplate/domain/store"
 	"github.com/rvldodo/boilerplate/lib/log"
 )
 
@@ -12,7 +13,7 @@ type UserService struct {
 	repo repository.UserRepository
 }
 
-func NewUserService(repo repository.UserRepository) UserService {
+func NewUserService(repo *store.UserStore) UserService {
 	return UserService{repo}
 }
 

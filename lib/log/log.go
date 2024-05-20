@@ -15,7 +15,7 @@ type customFieldsHook struct{}
 func init() {
 	logrus.SetReportCaller(true)
 	formater := &logrus.TextFormatter{
-		TimestampFormat:        "02-05-2020 13:13:13",
+		TimestampFormat:        "02-01-2006 15:04:05",
 		FullTimestamp:          true,
 		DisableLevelTruncation: true,
 		CallerPrettyfier: func(f *runtime.Frame) (string, string) {
