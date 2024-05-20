@@ -7,8 +7,14 @@ import (
 )
 
 type Config struct {
-	Addrs   string
-	AppName string
+	Addrs          string
+	AppName        string
+	DBUser         string
+	DBPass         string
+	DBAddrs        string
+	DBName         string
+	SecretTokenJWT string
+	JWTExpiredTime int64
 	// add new config when needed
 }
 
@@ -21,7 +27,13 @@ func initConfig() Config {
 	}
 
 	return Config{
-		Addrs:   viper.GetString("ADDRS"),
-		AppName: viper.GetString("APP_NAME"),
+		Addrs:          viper.GetString("ADDRS"),
+		AppName:        viper.GetString("APP_NAME"),
+		DBUser:         viper.GetString("MYSQL_USER"),
+		DBPass:         viper.GetString("MYSQL_PASSWORD"),
+		DBAddrs:        viper.GetString("MYSQL_ADDRESS"),
+		DBName:         viper.GetString("MYSQL_DATABASE"),
+		SecretTokenJWT: viper.GetString("JWT_SECRET"),
+		JWTExpiredTime: viper.GetInt64("JWT_EXPIRED"),
 	}
 }

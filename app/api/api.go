@@ -1,7 +1,6 @@
 package api
 
 import (
-	"encoding/json"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -26,9 +25,6 @@ func NewAPI(addrs string, store *gorm.DB) *ServerAPI {
 func (s *ServerAPI) Run() error {
 	router := mux.NewRouter()
 
-	router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		json.NewEncoder(w).Encode("testing")
-	}).Methods("GET")
 	middlewares.LogginMiddleware(router)
 
 	log.Infof("Server listening on: %s", s.Addrs)
