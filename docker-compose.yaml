@@ -3,6 +3,7 @@ version: "3.8"
 services:
   db:
     image: mysql:8
+    container_name: "db_mysql"
     volumes:
       - db_data:/var/lib/mysql
     ports:
@@ -17,5 +18,21 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
     # command: --default-authentication-plugin=mysql_native_password
 
+  api:
+    container_name: "boilerplate"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "1337:1337"
+    depends_on:
+      - db
+    networks:
+      - default
+    volumes:
+      - .:/app/
+
+networks:
+  default:
 volumes:
   db_data:
