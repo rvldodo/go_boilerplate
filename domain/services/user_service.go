@@ -97,3 +97,16 @@ func (s *UserService) FindUserByEmailShowPassword(
 		UpdatedAt: u.UpdatedAt,
 	}, nil
 }
+
+func (s *UserService) FindListUsers(
+	ctx context.Context,
+	limit, offset int,
+) ([]model.UserResponse, int, error) {
+	res, count, _, err := s.repo.FindListUsers(ctx, limit, offset)
+	if err != nil {
+		log.Errorf("Failed get list users: %v", err)
+		return []model.UserResponse{}, 0, err
+	}
+
+	return res, int(count / limit), nil
+}

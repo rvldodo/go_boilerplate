@@ -17,6 +17,8 @@ var (
 	jwtExpiredTime   = time.Second * time.Duration(config.Envs.JWTExpiredTime)
 )
 
+type MapClaims = jwt.MapClaims
+
 func CreateToken(userID uuid.UUID) (string, error) {
 	token := jwt.NewWithClaims(defaultMethodJWT, jwt.MapClaims{
 		"userID":    userID,

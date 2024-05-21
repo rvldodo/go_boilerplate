@@ -7,6 +7,7 @@ import (
 	"gorm.io/gorm"
 
 	"github.com/rvldodo/boilerplate/app/handlers/auth"
+	"github.com/rvldodo/boilerplate/app/handlers/user"
 	"github.com/rvldodo/boilerplate/app/middlewares"
 	"github.com/rvldodo/boilerplate/domain/services"
 	"github.com/rvldodo/boilerplate/domain/store"
@@ -32,8 +33,11 @@ func (s *ServerAPI) Run() error {
 	// User
 	userStore := store.NewUserStore(s.DB)
 	userService := services.NewUserService(userStore)
-	userHandler := auth.NewHandler(userService)
-	userHandler.RegisterRoutes(subrouter)
+	authHandler := auth.NewHandler(userService)
+	authHandler.RegisterRoutes(subrouter)
+
+	userhandler := user.NewHandler(userService, *userStore)
+	userhandler.RegisterRoutes(subrouter)
 
 	middlewares.LogginMiddleware(router)
 

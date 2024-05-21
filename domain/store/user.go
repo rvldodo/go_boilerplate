@@ -28,6 +28,28 @@ func (us *UserStore) Create(ctx context.Context, user model.User) error {
 	return nil
 }
 
+func (us *UserStore) FindListUsers(
+	ctx context.Context,
+	limit, offset int,
+) ([]model.UserResponse, int, int, error) {
+	var users []model.User
+	var count int64
+
+	countres := db.DB.WithContext(ctx).Model(&model.User{}).Count(&count)
+	if countres.Error != nil {
+		log.Errorf("Error users list repo: %v", countres.Error)
+		return []model.UserResponse{}, 0, 0, countres.Error
+	}
+
+	res := db.DB.WithContext(ctx).Limit(limit).Offset(offset).Find(&users)
+	if res.Error != nil {
+		log.Errorf("Error users list repo: %v", res.Error)
+		return []model.UserResponse{}, 0, 0, res.Error
+	}
+
+	return buildUserListResponse(users), int(count), limit, nil
+}
+
 func (us *UserStore) FindByEmail(ctx context.Context, email string) (model.UserResponse, error) {
 	var user model.User
 	err := db.DB.WithContext(ctx).Where("email = ?", email).Find(&user).Error
@@ -111,4 +133,21 @@ func buildUserResponseWithPassword(u model.User) model.UserResponseWithPassword 
 		CreatedAt: u.CreatedAt,
 		UpdatedAt: u.UpdatedAt,
 	}
+}
+
+func buildUserListResponse(u []model.User) []model.UserResponse {
+	var userResponses []model.UserResponse
+	for _, user := range u {
+		userResponse := model.UserResponse{
+			ID:        user.ID,
+			FirstName: user.FirstName,
+			LastName:  user.LastName,
+			Email:     user.Email,
+			CreatedAt: user.CreatedAt,
+			UpdatedAt: user.UpdatedAt,
+		}
+		userResponses = append(userResponses, userResponse)
+	}
+
+	return userResponses
 }
