@@ -31,22 +31,22 @@ type UserRequestLogin struct {
 }
 
 type UserResponse struct {
-	ID        uuid.UUID
-	FirstName string
-	LastName  string
-	Email     string
-	CreatedAt time.Time
-	UpdatedAt *time.Time
+	ID        uuid.UUID  `json:"id,omitempty"`
+	FirstName string     `json:"first_name,omitempty"`
+	LastName  string     `json:"last_name,omitempty"`
+	Email     string     `json:"email,omitempty"`
+	CreatedAt time.Time  `json:"created_at,omitempty"`
+	UpdatedAt *time.Time `json:"updated_at,omitempty"`
 }
 
 type UserResponseWithPassword struct {
-	ID        uuid.UUID
-	FirstName string
-	LastName  string
-	Email     string
-	Password  string
-	CreatedAt time.Time
-	UpdatedAt *time.Time
+	ID        uuid.UUID  `json:"id,omitempty"`
+	FirstName string     `json:"first_name,omitempty"`
+	LastName  string     `json:"last_name,omitempty"`
+	Email     string     `json:"email,omitempty"`
+	Password  string     `json:"password,omitempty"`
+	CreatedAt time.Time  `json:"created_at,omitempty"`
+	UpdatedAt *time.Time `json:"updated_at,omitempty"`
 }
 
 func NewUser(user *UserRequest) User {

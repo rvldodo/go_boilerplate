@@ -1,8 +1,12 @@
 package user
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
+
+	"github.com/google/uuid"
+	"github.com/gorilla/mux"
 
 	"github.com/rvldodo/boilerplate/domain/services"
 	"github.com/rvldodo/boilerplate/domain/store"
@@ -39,4 +43,20 @@ func (h *Handler) handleListUsers(w http.ResponseWriter, r *http.Request) {
 	}
 
 	utils.WriteJSON(w, http.StatusOK, map[string]interface{}{"users": res, "totalPage": count})
+}
+
+func (h *Handler) handleDeleteUser(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	str := vars["userID"]
+
+	userID, _ := uuid.Parse(str)
+
+	err := h.service.DeleteUserById(r.Context(), userID)
+	if err != nil {
+		log.Errorf("Error user not found by id: %v", err)
+		utils.WriteError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	utils.WriteJSON(w, http.StatusOK, fmt.Sprintf("Successfully delete user by id %v", userID))
 }

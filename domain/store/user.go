@@ -35,17 +35,13 @@ func (us *UserStore) FindListUsers(
 	var users []model.User
 	var count int64
 
-	countres := db.DB.WithContext(ctx).Model(&model.User{}).Count(&count)
-	if countres.Error != nil {
-		log.Errorf("Error users list repo: %v", countres.Error)
-		return []model.UserResponse{}, 0, 0, countres.Error
+	query := db.DB.WithContext(ctx).Model(&model.User{})
+	if query.Error != nil {
+		log.Errorf("Error find user list: %v", query.Error)
+		return []model.UserResponse{}, 0, 0, query.Error
 	}
-
-	res := db.DB.WithContext(ctx).Limit(limit).Offset(offset).Find(&users)
-	if res.Error != nil {
-		log.Errorf("Error users list repo: %v", res.Error)
-		return []model.UserResponse{}, 0, 0, res.Error
-	}
+	query.Count(&count)
+	query.Find(&users)
 
 	return buildUserListResponse(users), int(count), limit, nil
 }

@@ -2,6 +2,7 @@ package services
 
 import (
 	"context"
+	"math"
 
 	"github.com/google/uuid"
 
@@ -67,14 +68,7 @@ func (s *UserService) FindUserByEmail(
 		return model.UserResponse{}, err
 	}
 
-	return model.UserResponse{
-		ID:        u.ID,
-		FirstName: u.FirstName,
-		LastName:  u.LastName,
-		Email:     u.Email,
-		CreatedAt: u.CreatedAt,
-		UpdatedAt: u.UpdatedAt,
-	}, nil
+	return buildUserResponse(u), nil
 }
 
 func (s *UserService) FindUserByEmailShowPassword(
@@ -87,15 +81,7 @@ func (s *UserService) FindUserByEmailShowPassword(
 		return model.UserResponseWithPassword{}, err
 	}
 
-	return model.UserResponseWithPassword{
-		ID:        u.ID,
-		FirstName: u.FirstName,
-		LastName:  u.LastName,
-		Email:     u.Email,
-		Password:  u.Password,
-		CreatedAt: u.CreatedAt,
-		UpdatedAt: u.UpdatedAt,
-	}, nil
+	return buildUserResponseWithPassword(u), nil
 }
 
 func (s *UserService) FindListUsers(
@@ -108,5 +94,39 @@ func (s *UserService) FindListUsers(
 		return []model.UserResponse{}, 0, err
 	}
 
-	return res, int(count / limit), nil
+	return res, int(math.Ceil(float64(count) / float64(limit))), nil
+}
+
+func (s *UserService) DeleteUserById(ctx context.Context, userID uuid.UUID) error {
+	err := s.repo.DeleteById(ctx, userID)
+	if err != nil {
+		log.Errorf("Failed delete user by id: %v", err)
+		return err
+	}
+	return nil
+}
+
+func buildUserResponse(u model.UserResponse) model.UserResponse {
+	return model.UserResponse{
+		ID:        u.ID,
+		FirstName: u.FirstName,
+		LastName:  u.LastName,
+		Email:     u.Email,
+		CreatedAt: u.CreatedAt,
+		UpdatedAt: u.UpdatedAt,
+	}
+}
+
+func buildUserResponseWithPassword(
+	u model.UserResponseWithPassword,
+) model.UserResponseWithPassword {
+	return model.UserResponseWithPassword{
+		ID:        u.ID,
+		FirstName: u.FirstName,
+		LastName:  u.LastName,
+		Email:     u.Email,
+		Password:  u.Password,
+		CreatedAt: u.CreatedAt,
+		UpdatedAt: u.UpdatedAt,
+	}
 }
