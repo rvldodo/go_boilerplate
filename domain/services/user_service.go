@@ -76,3 +76,24 @@ func (s *UserService) FindUserByEmail(
 		UpdatedAt: u.UpdatedAt,
 	}, nil
 }
+
+func (s *UserService) FindUserByEmailShowPassword(
+	ctx context.Context,
+	email string,
+) (model.UserResponseWithPassword, error) {
+	u, err := s.repo.FindByEmailShowPassword(ctx, email)
+	if err != nil {
+		log.Errorf("Failed find user by email: %v", err)
+		return model.UserResponseWithPassword{}, err
+	}
+
+	return model.UserResponseWithPassword{
+		ID:        u.ID,
+		FirstName: u.FirstName,
+		LastName:  u.LastName,
+		Email:     u.Email,
+		Password:  u.Password,
+		CreatedAt: u.CreatedAt,
+		UpdatedAt: u.UpdatedAt,
+	}, nil
+}

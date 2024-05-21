@@ -25,11 +25,26 @@ type UserRequest struct {
 	Password  string `json:"password,omitempty"   validate:"required,min=6"`
 }
 
+type UserRequestLogin struct {
+	Email    string `json:"email,omitempty"    validate:"required,email"`
+	Password string `json:"password,omitempty" validate:"required,min=6"`
+}
+
 type UserResponse struct {
 	ID        uuid.UUID
 	FirstName string
 	LastName  string
 	Email     string
+	CreatedAt time.Time
+	UpdatedAt *time.Time
+}
+
+type UserResponseWithPassword struct {
+	ID        uuid.UUID
+	FirstName string
+	LastName  string
+	Email     string
+	Password  string
 	CreatedAt time.Time
 	UpdatedAt *time.Time
 }
