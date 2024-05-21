@@ -17,6 +17,10 @@ type UserRepository interface {
 		email string,
 	) (model.UserResponseWithPassword, error)
 	FindById(ctx context.Context, id uuid.UUID) (model.UserResponse, error)
-	Update(ctx context.Context, id uuid.UUID, user model.User) (model.UserResponse, error)
+	Update(
+		ctx context.Context,
+		id uuid.UUID,
+		user model.UserRequestUpdate,
+	) (model.UserResponse, error)
 	DeleteById(ctx context.Context, id uuid.UUID) error
 }

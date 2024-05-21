@@ -8,6 +8,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 
+	"github.com/rvldodo/boilerplate/domain/model"
 	"github.com/rvldodo/boilerplate/domain/services"
 	"github.com/rvldodo/boilerplate/domain/store"
 	"github.com/rvldodo/boilerplate/lib/log"
@@ -59,4 +60,27 @@ func (h *Handler) handleDeleteUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	utils.WriteJSON(w, http.StatusOK, fmt.Sprintf("Successfully delete user by id %v", userID))
+}
+
+func (h *Handler) handleUpdateUser(w http.ResponseWriter, r *http.Request) {
+	var user model.UserRequestUpdate
+
+	vars := mux.Vars(r)
+	str := vars["userID"]
+	userID, _ := uuid.Parse(str)
+
+	if err := utils.ParseJSON(r, &user); err != nil {
+		log.Errorf("Error parse user: %v", err)
+		utils.WriteError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	u, err := h.service.UpdateUser(r.Context(), userID, user)
+	if err != nil {
+		log.Errorf("Error in update user: %v", err)
+		utils.WriteError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	utils.WriteJSON(w, http.StatusOK, u)
 }

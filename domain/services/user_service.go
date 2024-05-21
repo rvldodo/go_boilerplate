@@ -106,6 +106,20 @@ func (s *UserService) DeleteUserById(ctx context.Context, userID uuid.UUID) erro
 	return nil
 }
 
+func (s *UserService) UpdateUser(
+	ctx context.Context,
+	id uuid.UUID,
+	user model.UserRequestUpdate,
+) (model.UserResponse, error) {
+	u, err := s.repo.Update(ctx, id, user)
+	if err != nil {
+		log.Errorf("Failed to update user: %v", err)
+		return model.UserResponse{}, err
+	}
+
+	return buildUserResponse(u), nil
+}
+
 func buildUserResponse(u model.UserResponse) model.UserResponse {
 	return model.UserResponse{
 		ID:        u.ID,

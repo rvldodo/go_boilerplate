@@ -82,7 +82,7 @@ func (us *UserStore) FindById(ctx context.Context, id uuid.UUID) (model.UserResp
 func (us *UserStore) Update(
 	ctx context.Context,
 	id uuid.UUID,
-	user model.User,
+	user model.UserRequestUpdate,
 ) (model.UserResponse, error) {
 	var existUser model.User
 	res := db.DB.WithContext(ctx).Where("id = ?", id).Find(&existUser)

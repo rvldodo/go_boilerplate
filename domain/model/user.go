@@ -25,6 +25,11 @@ type UserRequest struct {
 	Password  string `json:"password,omitempty"   validate:"required,min=6"`
 }
 
+type UserRequestUpdate struct {
+	FirstName string `json:"first_name,omitempty" validate:"required"`
+	LastName  string `json:"last_name,omitempty"  validate:"required"`
+}
+
 type UserRequestLogin struct {
 	Email    string `json:"email,omitempty"    validate:"required,email"`
 	Password string `json:"password,omitempty" validate:"required,min=6"`
