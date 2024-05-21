@@ -1,9 +1,11 @@
 package auth
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/google/uuid"
 
 	"github.com/rvldodo/boilerplate/domain/model"
 	"github.com/rvldodo/boilerplate/domain/services"
@@ -33,12 +35,18 @@ func (h *Handler) handleRegister(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	u, err := h.service.CreateUser(user)
+	us, err := h.service.FindUserByEmail(r.Context(), user.Email)
+	if err == nil && us.ID != uuid.Nil {
+		log.Errorf("Email %s already registered", user.Email)
+		utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("Email already registered"))
+		return
+	}
+
+	u, err := h.service.CreateUser(r.Context(), user)
 	if err != nil {
 		log.Error(err)
 		utils.WriteError(w, http.StatusBadRequest, err)
 		return
-
 	}
 
 	utils.WriteJSON(w, http.StatusCreated, u)

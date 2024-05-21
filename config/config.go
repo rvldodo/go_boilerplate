@@ -15,6 +15,8 @@ type Config struct {
 	DBName         string
 	SecretTokenJWT string
 	JWTExpiredTime int64
+	DBMigrations   string
+	DBSeeds        string
 	// add new config when needed
 }
 
@@ -35,5 +37,7 @@ func initConfig() Config {
 		DBName:         viper.GetString("MYSQL_DATABASE"),
 		SecretTokenJWT: viper.GetString("JWT_SECRET"),
 		JWTExpiredTime: viper.GetInt64("JWT_EXPIRED"),
+		DBMigrations:   viper.GetString("DB_MIGRATIONS"),
+		DBSeeds:        viper.GetString("DB_SEEDS"),
 	}
 }
