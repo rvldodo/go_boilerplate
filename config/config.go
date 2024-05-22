@@ -7,16 +7,19 @@ import (
 )
 
 type Config struct {
-	Addrs          string
-	AppName        string
-	DBUser         string
-	DBPass         string
-	DBAddrs        string
-	DBName         string
-	SecretTokenJWT string
-	JWTExpiredTime int64
-	DBMigrations   string
-	DBSeeds        string
+	Addrs              string
+	AppName            string
+	DBUser             string
+	DBPass             string
+	DBAddrs            string
+	DBName             string
+	SecretTokenJWT     string
+	JWTExpiredTime     int64
+	DBMigrations       string
+	DBSeeds            string
+	GoogleClientID     string
+	GoogleClientSecret string
+	GoogleRandomState  string
 	// add new config when needed
 }
 
@@ -29,15 +32,18 @@ func initConfig() Config {
 	}
 
 	return Config{
-		Addrs:          viper.GetString("ADDRS"),
-		AppName:        viper.GetString("APP_NAME"),
-		DBUser:         viper.GetString("MYSQL_USER"),
-		DBPass:         viper.GetString("MYSQL_PASSWORD"),
-		DBAddrs:        viper.GetString("MYSQL_ADDRESS"),
-		DBName:         viper.GetString("MYSQL_DATABASE"),
-		SecretTokenJWT: viper.GetString("JWT_SECRET"),
-		JWTExpiredTime: viper.GetInt64("JWT_EXPIRED"),
-		DBMigrations:   viper.GetString("DB_MIGRATIONS"),
-		DBSeeds:        viper.GetString("DB_SEEDS"),
+		Addrs:              viper.GetString("ADDRS"),
+		AppName:            viper.GetString("APP_NAME"),
+		DBUser:             viper.GetString("MYSQL_USER"),
+		DBPass:             viper.GetString("MYSQL_PASSWORD"),
+		DBAddrs:            viper.GetString("MYSQL_ADDRESS"),
+		DBName:             viper.GetString("MYSQL_DATABASE"),
+		SecretTokenJWT:     viper.GetString("JWT_SECRET"),
+		JWTExpiredTime:     viper.GetInt64("JWT_EXPIRED"),
+		DBMigrations:       viper.GetString("DB_MIGRATIONS"),
+		DBSeeds:            viper.GetString("DB_SEEDS"),
+		GoogleClientID:     viper.GetString("GOOGLE_CLIENTID"),
+		GoogleClientSecret: viper.GetString("GOOGLE_CLIENTSECRET"),
+		GoogleRandomState:  viper.GetString("GOOGLE_RANDOMSTATE"),
 	}
 }

@@ -48,14 +48,7 @@ func (s *UserService) FindUserByID(ctx context.Context, id uuid.UUID) (model.Use
 		return model.UserResponse{}, err
 	}
 
-	return model.UserResponse{
-		ID:        u.ID,
-		FirstName: u.FirstName,
-		LastName:  u.LastName,
-		Email:     u.Email,
-		CreatedAt: u.CreatedAt,
-		UpdatedAt: u.UpdatedAt,
-	}, nil
+	return buildUserResponse(u), nil
 }
 
 func (s *UserService) FindUserByEmail(

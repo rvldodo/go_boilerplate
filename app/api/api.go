@@ -7,8 +7,10 @@ import (
 	"gorm.io/gorm"
 
 	"github.com/rvldodo/boilerplate/app/handlers/auth"
+	"github.com/rvldodo/boilerplate/app/handlers/google"
 	"github.com/rvldodo/boilerplate/app/handlers/user"
 	"github.com/rvldodo/boilerplate/app/middlewares"
+	"github.com/rvldodo/boilerplate/config"
 	"github.com/rvldodo/boilerplate/domain/services"
 	"github.com/rvldodo/boilerplate/domain/store"
 	"github.com/rvldodo/boilerplate/lib/log"
@@ -27,6 +29,7 @@ func NewAPI(addrs string, store *gorm.DB) *ServerAPI {
 }
 
 func (s *ServerAPI) Run() error {
+	config.GoogleConfigInit()
 	router := mux.NewRouter()
 	subrouter := router.PathPrefix("/api/v1").Subrouter()
 
@@ -38,6 +41,10 @@ func (s *ServerAPI) Run() error {
 
 	userhandler := user.NewHandler(userService, *userStore)
 	userhandler.RegisterRoutes(subrouter)
+
+	googleService := services.NewGoogleService(userStore)
+	googleHandler := google.NewHandler(googleService)
+	googleHandler.RegisterRoutes(subrouter)
 
 	middlewares.LogginMiddleware(router)
 
