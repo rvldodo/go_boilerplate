@@ -34,7 +34,7 @@ func New() (*Redis, error) {
 
 func Run(ctx context.Context, r *redis.Client) error {
 	err := r.Ping(ctx)
-	if err != nil {
+	if err.Val() != "PONG" {
 		log.Errorf("Redis failed to connect: %v", err.Err())
 		return err.Err()
 	}
