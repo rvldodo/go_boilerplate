@@ -1,28 +1,20 @@
+FROM golang:1.22-alpine
 
-FROM golang:1.22-alpine AS builder
+RUN apk update && apk add --no-cache make git
 
-WORKDIR /app/
+WORKDIR /usr/src
 
 COPY go.mod go.sum ./
+COPY .env ./
+
 RUN go mod tidy
+RUN go install github.com/cosmtrek/air@latest
+RUN go install github.com/pressly/goose/v3/cmd/goose@latest
 
 COPY . .
-RUN go build -o ./build ./cmd/main.go
 
-FROM alpine:3.19
+RUN make migrate_status
+RUN make migrate_up
 
-WORKDIR /app/
 
-COPY --from=builder /app/build/ .
-
-COPY .env .
-COPY --from=builder /app/goose/migrations ./migrations
-
-# Change permissions of the built binary
-RUN chmod +x ./build
-
-EXPOSE 1337
-
-RUN ls -la /app/build
-# Define the command to execute when the container starts
-CMD ["sh", "-c", "./build migrate_up && ./build"]
+CMD ["air"]

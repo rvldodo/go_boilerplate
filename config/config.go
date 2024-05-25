@@ -20,6 +20,10 @@ type Config struct {
 	GoogleClientID     string
 	GoogleClientSecret string
 	GoogleRandomState  string
+	RedisAddress       string
+	RedisPassword      string
+	RedisDB            int
+	RedisTimeout       int64
 	// add new config when needed
 }
 
@@ -45,5 +49,9 @@ func initConfig() Config {
 		GoogleClientID:     viper.GetString("GOOGLE_CLIENTID"),
 		GoogleClientSecret: viper.GetString("GOOGLE_CLIENTSECRET"),
 		GoogleRandomState:  viper.GetString("GOOGLE_RANDOMSTATE"),
+		RedisAddress:       viper.GetString("REDIS_ADDRESS"),
+		RedisPassword:      viper.GetString("REDIS_PASSWORD"),
+		RedisDB:            viper.GetInt("REDIS_DB"),
+		RedisTimeout:       viper.GetInt64("REDIS_TIMEOUT"),
 	}
 }

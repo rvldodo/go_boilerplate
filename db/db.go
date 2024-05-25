@@ -32,7 +32,7 @@ func init() {
 
 func newMySQLStorage(config mysqlid.Config) (*gorm.DB, error) {
 	db, err := gorm.Open(mysql.New(mysql.Config{DSN: config.FormatDSN()}), &gorm.Config{
-		Logger: logger.Default.LogMode(logger.Error),
+		Logger: logger.Default.LogMode(logger.Info),
 	})
 	if err != nil {
 		log.Errorf("Gorm error: %v", err)

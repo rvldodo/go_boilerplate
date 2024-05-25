@@ -1,6 +1,19 @@
 version: "3.8"
 
 services:
+  # api:
+  #   container_name: "api_boilerplate"
+  #   build: .
+  #   env_file:
+  #     - .env
+  #   ports:
+  #     - "1337:1337"
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
+  #   volumes:
+  #     - .:/app
+
   db:
     image: mysql:8
     container_name: "db_mysql"
@@ -16,23 +29,18 @@ services:
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
-    # command: --default-authentication-plugin=mysql_native_password
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
-  api:
-    container_name: "boilerplate"
-    build:
-      context: .
-      dockerfile: Dockerfile
+  redis:
+    image: redis:7
     ports:
-      - "1337:1337"
-    depends_on:
-      - db
-    networks:
-      - default
-    volumes:
-      - .:/app/
+      - "6379:6379"
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
 
-networks:
-  default:
 volumes:
   db_data:

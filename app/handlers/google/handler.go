@@ -8,16 +8,18 @@ import (
 	"github.com/rvldodo/boilerplate/config"
 	"github.com/rvldodo/boilerplate/domain/model"
 	"github.com/rvldodo/boilerplate/domain/services"
+	"github.com/rvldodo/boilerplate/lib/jwt"
 	"github.com/rvldodo/boilerplate/lib/log"
 	"github.com/rvldodo/boilerplate/utils"
 )
 
 type Handler struct {
-	service services.GoogleService
+	service     services.GoogleService
+	userService services.UserService
 }
 
-func NewHandler(service services.GoogleService) *Handler {
-	return &Handler{service}
+func NewHandler(service services.GoogleService, userService services.UserService) *Handler {
+	return &Handler{service, userService}
 }
 
 func (h *Handler) handleGoogle(w http.ResponseWriter, r *http.Request) {
@@ -60,12 +62,36 @@ func (h *Handler) handleGoogleCallback(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	ux, err := h.userService.FindUserByEmail(r.Context(), userInfo.Email)
+	fmt.Println(userInfo.ID)
+	fmt.Println(ux)
+	if err == nil && ux.UserGoogleID == userInfo.ID {
+		token, err := jwt.CreateToken(ux.ID)
+		if err != nil {
+			log.Errorf("Error generate token: %v", err)
+			utils.WriteError(w, http.StatusBadRequest, err)
+			return
+		}
+
+		utils.WriteJSON(w, http.StatusOK, map[string]string{"token": token})
+		return
+	}
+
 	us, err := h.service.CreateUser(r.Context(), userInfo)
 	if err != nil {
 		log.Errorf("Error create user from google: %v", err)
 		utils.WriteError(w, http.StatusBadRequest, err)
 		return
-	}
+	} else {
 
-	utils.WriteJSON(w, http.StatusOK, us)
+		token, err := jwt.CreateToken(us.ID)
+		if err != nil {
+			log.Errorf("Error generate token: %v", err)
+			utils.WriteError(w, http.StatusBadRequest, err)
+			return
+		}
+
+		utils.WriteJSON(w, http.StatusOK, map[string]string{"token": token})
+		return
+	}
 }

@@ -2,9 +2,6 @@ package services
 
 import (
 	"context"
-	"fmt"
-
-	"github.com/google/uuid"
 
 	"github.com/rvldodo/boilerplate/domain/model"
 	"github.com/rvldodo/boilerplate/domain/repository"
@@ -31,14 +28,14 @@ func (gs *GoogleService) CreateUser(
 		UserGoogleID: user.ID,
 	}
 
-	ue, err := gs.repo.FindByEmail(ctx, user.Email)
-	if err == nil && ue.ID != uuid.Nil {
-		log.Error("User already registered")
-		return model.UserResponse{}, fmt.Errorf("User already registered")
-	}
+	// ue, err := gs.repo.FindByEmail(ctx, user.Email)
+	// if err == nil && ue.ID != uuid.Nil {
+	// 	log.Error("User already registered")
+	// 	return model.UserResponse{}, fmt.Errorf("User already registered")
+	// }
 
 	us := model.NewUser(&u)
-	err = gs.repo.Create(ctx, us)
+	err := gs.repo.Create(ctx, us)
 	if err != nil {
 		log.Errorf("Error create user from google: %v", err)
 		return model.UserResponse{}, err

@@ -115,12 +115,13 @@ func (s *UserService) UpdateUser(
 
 func buildUserResponse(u model.UserResponse) model.UserResponse {
 	return model.UserResponse{
-		ID:        u.ID,
-		FirstName: u.FirstName,
-		LastName:  u.LastName,
-		Email:     u.Email,
-		CreatedAt: u.CreatedAt,
-		UpdatedAt: u.UpdatedAt,
+		ID:           u.ID,
+		FirstName:    u.FirstName,
+		LastName:     u.LastName,
+		Email:        u.Email,
+		UserGoogleID: u.UserGoogleID,
+		CreatedAt:    u.CreatedAt,
+		UpdatedAt:    u.UpdatedAt,
 	}
 }
 

@@ -110,12 +110,13 @@ func (us *UserStore) DeleteById(ctx context.Context, id uuid.UUID) error {
 
 func buildUserResponse(u model.User) model.UserResponse {
 	return model.UserResponse{
-		ID:        u.ID,
-		FirstName: u.FirstName,
-		LastName:  u.LastName,
-		Email:     u.Email,
-		CreatedAt: u.CreatedAt,
-		UpdatedAt: u.UpdatedAt,
+		ID:           u.ID,
+		FirstName:    u.FirstName,
+		LastName:     u.LastName,
+		Email:        u.Email,
+		UserGoogleID: u.UserGoogleID,
+		CreatedAt:    u.CreatedAt,
+		UpdatedAt:    u.UpdatedAt,
 	}
 }
 
